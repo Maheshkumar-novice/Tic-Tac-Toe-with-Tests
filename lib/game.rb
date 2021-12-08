@@ -25,6 +25,7 @@ class Game
 
   def update_players_data
     update_player1_data
+    puts
     update_player2_data
     verify_players_choices
   end
@@ -41,12 +42,6 @@ class Game
 
   def verify_players_choices
     @other_player.update_choice until @other_player.choice != @current_player.choice
-  end
-
-  def print_info
-    board.print_board
-    print_instructions
-    print_introduction(current_player, other_player)
   end
 
   def game_loop
@@ -94,6 +89,14 @@ class Game
 
   def switch_players
     @current_player, @other_player = @other_player, @current_player
+  end
+
+  private
+
+  def print_info
+    board.print_board
+    print_instructions
+    print_introduction(current_player, other_player)
   end
 
   def announce_result
