@@ -68,7 +68,7 @@ describe Player do
         player.choice_data
       end
 
-      it 'returns valid name' do
+      it 'returns valid choice' do
         choice = player.choice_data
         expect(choice).to eq('O')
       end
@@ -84,7 +84,7 @@ describe Player do
         player.choice_data
       end
 
-      it 'returns valid name' do
+      it 'returns valid choice' do
         choice = player.choice_data
         expect(choice).to eq('O')
       end
