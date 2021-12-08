@@ -1,96 +1,106 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-module TicTacToe
-  # Game Class
-  class Game
-    attr_reader :current_player, :other_player, :board
+require_relative './display'
+require_relative './player'
+require_relative './board'
 
-    def initialize(players, board = Board.new)
-      @board = board
-      @players = players
-      @current_player, @other_player = players.shuffle
-    end
+# Game Class
+class Game
+  include Display
 
-    def play
-      give_intro
-      loop do
-        puts "\n#{current_player.name} '#{current_player.choice}': "
+  attr_reader :current_player, :other_player, :board
 
-        row = get_value
-        column = get_value('Column')
+  def initialize(player1 = Player.new, player2 = Player.new, board = Board.new)
+    @board = board
+    @current_player, @other_player = [player1, player2].shuffle
+  end
 
-        move_status = make_move(row, column, current_player.choice)
+  def play
+    update_players_data
+    print_info
+    game_loop
+    announce_result
+  end
 
-        unless move_status
-          print_error
-          redo
-        end
+  def update_players_data
+    update_player1_data
+    update_player2_data
+    verify_players_choices
+  end
 
-        break if check_winner(current_player)
+  def update_player1_data
+    puts 'Enter Player 1 Data: '
+    @current_player.update_data
+  end
 
-        switch_players
-      end
-    end
+  def update_player2_data
+    puts 'Enter Player 2 Data: '
+    @other_player.update_data
+  end
 
-    private
+  def verify_players_choices
+    @other_player.update_choice until @other_player.choice != @current_player.choice
+  end
 
-    def make_move(row, column, value)
-      return false if row <= 0 || row > 3 || column <= 0 || column > 3
-      return false unless board.valid_move?(row, column)
-      return false unless %w[X O].include?(value)
+  def print_info
+    board.print_board
+    print_instructions
+    print_introduction(current_player, other_player)
+  end
 
-      board.update_cell(row, column, value)
+  def game_loop
+    loop do
+      print_player_data(current_player)
+      row, column = move_coordinates
+      board.update_cell(row, column, current_player.choice)
       board.print_board
+      break if board.game_over?
 
-      true
+      switch_players
     end
+  end
 
-    def switch_players
-      @current_player, @other_player = @other_player, @current_player
+  def move_coordinates
+    row = row_value
+    column = column_value
+    until board.valid_move?(row, column)
+      print_input_error
+      row = row_value
+      column = column_value
     end
+    [row, column]
+  end
 
-    def check_winner(player)
-      result = board.game_over
-      return false unless result
+  def row_value
+    print 'Enter Row '
+    coordinate_input
+  end
 
-      if result == :draw
-        announce_draw
-      else
-        announce_winner(player)
-      end
-      true
+  def column_value
+    print 'Enter Column '
+    coordinate_input
+  end
+
+  def coordinate_input
+    print '> '
+    input = gets.chomp
+    unless input.match?(/^[0-2]{1}$/)
+      print_input_error
+      return coordinate_input
     end
+    input.to_i
+  end
 
-    def get_value(value = 'Row')
-      print "Enter #{value} > "
-      gets.chomp.to_i
-    end
+  def switch_players
+    @current_player, @other_player = @other_player, @current_player
+  end
 
-    def give_intro
-      board.print_board
-      print_instructions
-      puts "\n#{current_player.name} => #{current_player.choice}\t#{other_player.name} => #{other_player.choice}"
+  def announce_result
+    if board.result == :win
+      announce_winner(current_player)
+      return
     end
-
-    def announce_draw
-      puts "\n\n\e[33m Oops! Draw!\e[0m"
-    end
-
-    def announce_winner(player)
-      puts "\n\n\e[32m#{player.name} (#{player.choice}) Won!\e[0m"
-    end
-
-    def print_instructions
-      puts
-      puts 'Rows    => 1, 2, 3'
-      puts 'Columns => 1, 2, 3'
-      puts 'Enter Respective Row and Column value to make a move.'
-      puts "\nLet's Begin!\n"
-    end
-
-    def print_error
-      puts "\e[31mSorry, that is an invalid move. Please, try again.\e[0m"
-    end
+    announce_draw
   end
 end
