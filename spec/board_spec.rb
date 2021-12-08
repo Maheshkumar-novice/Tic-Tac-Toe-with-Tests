@@ -101,11 +101,43 @@ describe Board do
   end
 
   describe '#win?' do
-    context 'when winning position exist' do
+    context 'when diagonal winning position exist' do
       before do
         value = [
           [' ', ' ', 'X'],
           [' ', 'X', ' '],
+          ['X', ' ', ' ']
+        ]
+        board.instance_variable_set(:@board, value)
+      end
+
+      it 'returns true' do
+        result = board.win?
+        expect(result).to be true
+      end
+    end
+
+    context 'when horizontal winning position exist' do
+      before do
+        value = [
+          %w[X X X],
+          [' ', ' ', ' '],
+          [' ', ' ', ' ']
+        ]
+        board.instance_variable_set(:@board, value)
+      end
+
+      it 'returns true' do
+        result = board.win?
+        expect(result).to be true
+      end
+    end
+
+    context 'when vertical winning position exist' do
+      before do
+        value = [
+          ['X', ' ', ' '],
+          ['X', ' ', ' '],
           ['X', ' ', ' ']
         ]
         board.instance_variable_set(:@board, value)
