@@ -44,13 +44,6 @@ class Board
     board + board.transpose + diagonals
   end
 
-  def diagonals
-    [
-      [board[0][0], board[1][1], board[2][2]],
-      [board[0][2], board[1][1], board[2][0]]
-    ]
-  end
-
   def draw?
     board.flatten.none?(' ')
   end
@@ -69,5 +62,14 @@ class Board
       #{line}
 
     HEREDOC
+  end
+
+  private
+
+  def diagonals
+    [
+      [board[0][0], board[1][1], board[2][2]],
+      [board[0][2], board[1][1], board[2][0]]
+    ]
   end
 end
