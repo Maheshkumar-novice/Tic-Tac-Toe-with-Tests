@@ -12,8 +12,8 @@ class Game
   attr_reader :current_player, :other_player, :board
 
   def initialize(player1 = Player.new, player2 = Player.new, board = Board.new)
-    @board = board
     @current_player, @other_player = [player1, player2].shuffle
+    @board = board
   end
 
   def play
