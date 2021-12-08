@@ -17,7 +17,7 @@ class Player
 
   def name_data
     print 'Name > '
-    name = gets.chomp.capitalize
+    name = gets.chomp
     unless name.length.positive?
       puts 'Invalid Name!'
       return name_data
@@ -27,7 +27,7 @@ class Player
 
   def choice_data
     print 'Choice (O | X) > '
-    choice = gets.chomp.capitalize
+    choice = gets.chomp
     unless choice.match?(/^[OX]{1}$/)
       puts 'Invalid Choice!'
       return choice_data
