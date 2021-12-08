@@ -16,12 +16,12 @@ require_relative '../lib/board'
 # print_board -> Only puts no need for testing
 
 describe Board do
+  subject(:board) { described_class.new }
+
   describe '#initialize' do
     matcher :be_empty do
       match { |value| value == ' ' }
     end
-
-    subject(:board) { described_class.new }
 
     it 'creates an empty board' do
       board_cells = board.board.flatten
@@ -30,8 +30,6 @@ describe Board do
   end
 
   describe '#update_cell' do
-    subject(:board) { described_class.new }
-
     it 'updates the value of the cell' do
       row = 0
       column = 2
@@ -42,7 +40,6 @@ describe Board do
   end
 
   describe '#valid_move?' do
-    subject(:board) { described_class.new }
     context 'when the cell is empty' do
       it 'returns true' do
         row = 0
@@ -72,8 +69,6 @@ describe Board do
   end
 
   describe '#game_over?' do
-    subject(:board) { described_class.new }
-
     context 'when win occurs' do
       before { allow(board).to receive(:win?).and_return(true) }
 
@@ -106,8 +101,6 @@ describe Board do
   end
 
   describe '#win?' do
-    subject(:board) { described_class.new }
-
     context 'when winning position exist' do
       before do
         value = [
@@ -158,8 +151,6 @@ describe Board do
   end
 
   describe '#draw?' do
-    subject(:board) { described_class.new }
-
     context 'when the board is full' do
       before do
         value = [
@@ -210,8 +201,6 @@ describe Board do
   end
 
   describe '#result' do
-    subject(:board) { described_class.new }
-
     context 'when win occurs' do
       before do
         allow(board).to receive(:win?).and_return(true)
@@ -248,8 +237,6 @@ describe Board do
   end
 
   describe '#winning_positions' do
-    subject(:board) { described_class.new }
-
     before do
       value = [
         %w[X O O],
